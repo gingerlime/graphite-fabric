@@ -12,8 +12,7 @@ To execute:
 It might prompt you for the root password on the host you are trying to instal onto.
 
 Best to execute this on a clean virtual machine running Debian 6 (Squeeze). 
-It might however also work on other debian-based distributions like Ubuntu
-but might require some small tweaks.
+Also tested successfully on Ubuntu 12.04 VPS.
 
 """
 
@@ -67,7 +66,15 @@ def graphite_install():
         sudo('wget http://projects.unbit.it/downloads/uwsgi-0.9.9.2.tar.gz')
         sudo('tar -zxvf uwsgi-0.9.9.2.tar.gz')
     with cd('/usr/local/src/uwsgi-0.9.9.2'):
-        sudo('make -f Makefile.Py26')
+        result = sudo('python --version')
+        if '2.6' in result:
+            sudo('make -f Makefile.Py26')
+        elif '2.7' in result:
+            sudo('make -f Makefile.Py27')
+        else:
+            print "Unable to determine python version..."
+            sudo('make')
+
         sudo('cp uwsgi /usr/local/bin/')
         sudo('cp nginx/uwsgi_params /etc/nginx/')
 
