@@ -47,6 +47,7 @@ fabric script, and others who provided inspiration about Graphite in General:
  * [frl1nuX - Graphite and Nginx](http://www.frlinux.eu/?p=199)
  * [Agile Testing - Installing and configuring Graphite](http://agiletesting.blogspot.de/2011/04/installing-and-configuring-graphite.html)
  * [Corey Goldberg - Installing Graphite 0.9.9 on Ubuntu 12.04 LTS](http://coreygoldberg.blogspot.de/2012/04/installing-graphite-099-on-ubuntu-1204.html)
+ * [Tom Purl - Installing Graphite on Ubuntu 10.4 LTS](http://tompurl.com/2011/08/12/installing-graphite-on-ubuntu-10-4-lts/)
 
 Although not installed with this fabric script, I'd love to try these some time:
  * [Graphene](http://jondot.github.com/graphene/)
