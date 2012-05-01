@@ -61,5 +61,4 @@ I tested it with both Debian 6 and Ubuntu 12.04 successfully. However, you may e
 ## Help and Contribution
 
 I'd be happy to try to help if I can, but given the complexity of linux-based operating-systems, and my limited time, I might not be able to
-know why a certain operation fails or an error is generated. Feel free to fork for your own special requirements or
-needs.
+know why a certain operation fails or an error is generated. Feel free to fork for your own special requirements or needs.
