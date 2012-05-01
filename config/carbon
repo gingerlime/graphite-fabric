@@ -1,0 +1,26 @@
+#! /bin/sh
+# /etc/init.d/carbon
+
+# Some things that run always
+touch /var/lock/carbon
+
+GRAPHITE_HOME=/opt/graphite
+CARBON_USER=www-data
+
+# Carry out specific functions when asked to by the system
+case "$1" in
+    start)
+        echo "Starting script carbon "
+        su $CARBON_USER -c "cd $GRAPHITE_HOME"; su $CARBON_USR -c "$GRAPHITE_HOME/bin/carbon-cache.py start"
+        ;;
+    stop)
+        echo "Stopping script carbon"
+        su $CARBON_USER -c "cd $GRAPHITE_HOME"; su $CARBON_USR -c "$GRAPHITE_HOME/bin/carbon-cache.py stop"
+        ;;
+    *)
+        echo "Usage: /etc/init.d/carbon {start|stop}"
+        exit 1
+        ;;
+esac
+
+exit 0
