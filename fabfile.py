@@ -122,7 +122,7 @@ def graphite_install():
 
     # starting carbon-cache
     with cd('/opt/graphite/bin'):
-        sudo('./carbon-cachy.py start')
+        sudo('./carbon-cache.py start')
 
     # initializing graphite django db
     with cd('/opt/graphite/webapp/graphite'):
