@@ -63,9 +63,9 @@ def graphite_install():
 
     # installing uwsgi from source
     with cd('/usr/local/src'):
-        sudo('wget http://projects.unbit.it/downloads/uwsgi-0.9.9.2.tar.gz')
-        sudo('tar -zxvf uwsgi-0.9.9.2.tar.gz')
-    with cd('/usr/local/src/uwsgi-0.9.9.2'):
+        sudo('http://projects.unbit.it/downloads/uwsgi-1.2.3.tar.gz')
+        sudo('tar -zxvf uwsgi-1.2.3.tar.gz')
+    with cd('/usr/local/src/uwsgi-1.2.3'):
         result = sudo('python --version')
         if '2.6' in result:
             sudo('make -f Makefile.Py26')
@@ -80,11 +80,11 @@ def graphite_install():
 
     # downloading nginx source
     with cd('/usr/local/src'):
-        sudo('wget http://nginx.org/download/nginx-1.0.15.tar.gz')
-        sudo('tar -zxvf nginx-1.0.15.tar.gz')
+        sudo('wget http://nginx.org/download/nginx-1.2.0.tar.gz')
+        sudo('tar -zxvf nginx-1.2.0.tar.gz')
 
     # installing nginx
-    with cd('/usr/local/src/nginx-1.0.15'):
+    with cd('/usr/local/src/nginx-1.2.0'):
         sudo('./configure --prefix=/usr/local --with-pcre=/usr/local/src/pcre-8.30/ --with-http_ssl_module --with-http_gzip_static_module --conf-path=/etc/nginx/nginx.conf --pid-path=/var/run/nginx.pid --lock-path=/var/lock/nginx.lock --error-log-path=/var/log/nginx/error.log --http-log-path=/var/log/nginx/access.log --user=www-data --group=www-data')
         sudo('make && make install')
 
@@ -94,15 +94,15 @@ def graphite_install():
 
     # installing pixman
     with cd('/usr/local/src'):
-        sudo('wget http://cairographics.org/releases/pixman-0.20.2.tar.gz')
-        sudo('tar -zxvf pixman-0.20.2.tar.gz')
-    with cd('/usr/local/src/pixman-0.20.2'):
+        sudo('wget http://cairographics.org/releases/pixman-0.24.4.tar.gz')
+        sudo('tar -zxvf pixman-0.24.4.tar.gz')
+    with cd('/usr/local/src/pixman-0.24.4'):
         sudo('./configure && make && make install')
     # installing cairo
     with cd('/usr/local/src'):
-        sudo('wget http://cairographics.org/releases/cairo-1.10.2.tar.gz')
-        sudo('tar -zxvf cairo-1.10.2.tar.gz')
-    with cd('/usr/local/src/cairo-1.10.2'):
+        sudo('wget http://cairographics.org/releases/cairo-1.12.2.tar.xz')
+        sudo('tar -Jxf cairo-1.12.2.tar.xz')
+    with cd('/usr/local/src/cairo-1.12.2'):
         sudo('./configure && make && make install')
     # installing py2cairo (python 2.x cairo)
     with cd('/usr/local/src'):
