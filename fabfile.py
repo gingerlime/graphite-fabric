@@ -114,8 +114,7 @@ def graphite_install():
     sudo('supervisorctl update && supervisorctl start uwsgi')
 
     # starting carbon-cache
-    with cd('/opt/graphite/bin'):
-        sudo('./carbon-cache.py start')
+    sudo('/etc/init.d/carbon start')
 
     # initializing graphite django db
     with cd('/opt/graphite/webapp/graphite'):
