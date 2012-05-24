@@ -63,17 +63,10 @@ def graphite_install():
 
     # installing uwsgi from source
     with cd('/usr/local/src'):
-        sudo('http://projects.unbit.it/downloads/uwsgi-1.2.3.tar.gz')
+        sudo('wget http://projects.unbit.it/downloads/uwsgi-1.2.3.tar.gz')
         sudo('tar -zxvf uwsgi-1.2.3.tar.gz')
     with cd('/usr/local/src/uwsgi-1.2.3'):
-        result = sudo('python --version')
-        if '2.6' in result:
-            sudo('make -f Makefile.Py26')
-        elif '2.7' in result:
-            sudo('make -f Makefile.Py27')
-        else:
-            print "Unable to determine python version..."
-            sudo('make')
+        sudo('make')
 
         sudo('cp uwsgi /usr/local/bin/')
         sudo('cp nginx/uwsgi_params /etc/nginx/')
