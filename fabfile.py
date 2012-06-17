@@ -109,6 +109,9 @@ def graphite_install():
     with cd('/opt/graphite/conf/'):
         sudo('cp carbon.conf.example carbon.conf')
         sudo('cp storage-schemas.conf.example storage-schemas.conf')
+    # setting carbon pid folder and permissions
+    sudo('mkdir -p /var/run/carbon')
+    sudo('chown -R www-data: /var/run/carbon')
 
     # starting uwsgi
     sudo('supervisorctl update && supervisorctl start uwsgi')
