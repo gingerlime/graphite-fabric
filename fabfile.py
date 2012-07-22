@@ -112,6 +112,8 @@ def graphite_install():
     # setting carbon pid folder and permissions
     sudo('mkdir -p /var/run/carbon')
     sudo('chown -R www-data: /var/run/carbon')
+    # clearing old carbon log files
+    put('config/carbon-logrotate', '/etc/cron.daily/', use_sudo=True)
 
     # starting uwsgi
     sudo('supervisorctl update && supervisorctl start uwsgi')
