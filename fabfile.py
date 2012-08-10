@@ -110,7 +110,7 @@ def graphite_install():
     # setting the carbon config files (default)
     with cd('/opt/graphite/conf/'):
         sudo('cp carbon.conf.example carbon.conf')
-        put('config/storage-schemas.conf', 'storage-schemas.conf', use_sudo=True)
+        sudo('cp storage-schemas.conf.example storage-schemas.conf')
     # setting carbon pid folder and permissions
     sudo('mkdir -p /var/run/carbon')
     sudo('chown -R www-data: /var/run/carbon')
