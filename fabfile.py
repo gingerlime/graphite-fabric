@@ -135,10 +135,15 @@ def graphite_install():
 
 
 def statsd_install():
+    """
+    Installs etsy's node.js statsd and dependencies
+    """
     _check_sudo()
-    sudo('add-apt-repository ppa:chris-lea/node.js -y')
-    sudo('apt-get update && apt-get upgrade -y')
-    sudo('apt-get install git nodejs npm -y')
+    sudo('apt-get install -y make python g++ git-core supervisor')
+    with cd('/usr/local/src'):
+        sudo('wget -N http://nodejs.org/dist/node-latest.tar.gz')
+        sudo('tar -zxvf node-latest.tar.gz')
+        sudo('cd `ls -rd node-v*` && make install')
 
     with cd('/opt'):
         sudo('git clone https://github.com/etsy/statsd.git')
