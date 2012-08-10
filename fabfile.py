@@ -136,12 +136,12 @@ def graphite_install():
 
 def statsd_install():
     _check_sudo()
-    # sudo('add-apt-repository ppa:chris-lea/node.js -y')
-    # sudo('apt-get update && apt-get upgrade -y')
-    # sudo('apt-get install git nodejs npm -y')
+    sudo('add-apt-repository ppa:chris-lea/node.js -y')
+    sudo('apt-get update && apt-get upgrade -y')
+    sudo('apt-get install git nodejs npm -y')
 
-    # with cd('/opt'):
-    #     sudo('git clone https://github.com/etsy/statsd.git')
+    with cd('/opt'):
+        sudo('git clone https://github.com/etsy/statsd.git')
 
     with cd('/opt/statsd'):
         sudo('git checkout v0.5.0') # or comment this out and stay on trunk
