@@ -31,6 +31,12 @@ You can use it with a user other than root, as long as this user can `sudo`.
 During the installation, you would be asked to set up the django superuser account. You might want to create an account,
 but it's not strictly necessary. If you answer `no`, the installation will still work fine.
 
+### **OPTIONAL:** Install statsd.
+
+After installing graphite, run `fab statsd_install -H root@{hostname}`
+
+[statsd](https://github.com/etsy/statsd/) is a powerful, Node.js tool for aggregating data sent over UDP, which means it is fairly robust and allows for heaping large amounts of data into your stat backend (graphite) without fear of downtime or failures.
+
 ## After Installation
 
 Simply open your browser and go to `http://[your-hostname]/graphite/` ! It should be up and running.

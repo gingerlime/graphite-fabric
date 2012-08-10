@@ -3,6 +3,8 @@
 
 fabric-graphite is a fabric script to install Graphite, Nginx, uwsgi and all dependencies on a debian-based host.
 
+Plus, for a limited time, statsd support!
+
 To execute:
 
     * Make sure you have fabric installed on your local host (e.g. pip install fabric)
@@ -108,7 +110,7 @@ def graphite_install():
     # setting the carbon config files (default)
     with cd('/opt/graphite/conf/'):
         sudo('cp carbon.conf.example carbon.conf')
-        sudo('cp storage-schemas.conf.example storage-schemas.conf')
+        put('config/storage-schemas.conf', 'storage-schemas.conf', use_sudo=True)
     # setting carbon pid folder and permissions
     sudo('mkdir -p /var/run/carbon')
     sudo('chown -R www-data: /var/run/carbon')
@@ -130,3 +132,22 @@ def graphite_install():
 
     # starting nginx
     sudo('nginx')
+
+
+def statsd_install():
+    _check_sudo()
+    # sudo('add-apt-repository ppa:chris-lea/node.js -y')
+    # sudo('apt-get update && apt-get upgrade -y')
+    # sudo('apt-get install git nodejs npm -y')
+
+    # with cd('/opt'):
+    #     sudo('git clone https://github.com/etsy/statsd.git')
+
+    with cd('/opt/statsd'):
+        sudo('git checkout v0.5.0') # or comment this out and stay on trunk
+        put('config/localConfig.js', 'localConfig.js', use_sudo=True)
+        sudo('npm install')
+
+    put('config/statsd.conf', '/etc/supervisor/conf.d/', use_sudo=True)
+
+    sudo('supervisorctl update && supervisorctl start statsd')
