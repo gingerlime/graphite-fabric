@@ -16,12 +16,17 @@ touch /var/lock/carbon
 
 GRAPHITE_HOME=/opt/graphite
 CARBON_USER=www-data
-PIDFILE=/var/run/carbon/carbon.pid
+RUNDIR=/var/run/carbon
+PIDFILE=$RUNDIR/carbon.pid
 
 # Carry out specific functions when asked to by the system
 case "$1" in
     start)
-        echo "Starting script carbon "
+        echo "Starting script carbon"
+        mkdir -p $RUNDIR
+        touch $PIDFILE
+        chown $CARBON_USER:$CARBON_USER $RUNDIR $PIDFILE
+        chmod 755 $RUNDIR
         su $CARBON_USER -c "cd $GRAPHITE_HOME && $GRAPHITE_HOME/bin/carbon-cache.py --pidfile $PIDFILE start"
         ;;
     stop)
