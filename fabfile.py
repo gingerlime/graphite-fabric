@@ -114,18 +114,18 @@ def graphite_install():
     # clearing old carbon log files
     put('config/carbon-logrotate', '/etc/cron.daily/', use_sudo=True)
 
-    # starting uwsgi
-    sudo('supervisorctl update && supervisorctl start uwsgi')
-
-    # starting carbon-cache
-    sudo('/etc/init.d/carbon start')
-
     # initializing graphite django db
     with cd('/opt/graphite/webapp/graphite'):
         sudo("python manage.py syncdb")
 
     # changing ownership on graphite folders
     sudo('chown -R www-data: /opt/graphite/')
+
+    # starting uwsgi
+    sudo('supervisorctl update && supervisorctl start uwsgi')
+
+    # starting carbon-cache
+    sudo('/etc/init.d/carbon start')
 
     # starting nginx
     sudo('nginx')
