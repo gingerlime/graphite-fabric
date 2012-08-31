@@ -24,8 +24,7 @@ case "$1" in
     start)
         echo "Starting script carbon"
         mkdir -p $RUNDIR
-        touch $PIDFILE
-        chown $CARBON_USER:$CARBON_USER $RUNDIR $PIDFILE
+        chown -R $CARBON_USER:$CARBON_USER $RUNDIR
         chmod 755 $RUNDIR
         su $CARBON_USER -c "cd $GRAPHITE_HOME && $GRAPHITE_HOME/bin/carbon-cache.py --pidfile $PIDFILE start"
         ;;
