@@ -31,6 +31,12 @@ You can use it with a user other than root, as long as this user can `sudo`.
 During the installation, you would be asked to set up the django superuser account. You might want to create an account,
 but it's not strictly necessary. If you answer `no`, the installation will still work fine.
 
+### **OPTIONAL:** Install statsd.
+
+After installing graphite, run `fab statsd_install -H root@{hostname}`
+
+[statsd](https://github.com/etsy/statsd/) is a powerful, Node.js tool for aggregating data sent over UDP, which means it is fairly robust and allows for heaping large amounts of data into your stat backend (graphite) without fear of downtime or failures.
+
 ## After Installation
 
 Simply open your browser and go to `http://[your-hostname]/graphite/` ! It should be up and running.
@@ -38,7 +44,15 @@ Simply open your browser and go to `http://[your-hostname]/graphite/` ! It shoul
 Of course there's a lot more configuration to be done, but at the very least you should have a working environment to
 play with Graphite.
 
+## Security
+
+The scripts are meant to be used as a starting point for experimenting and trying out graphite and statsd, but they are by no means 'production-ready'.
+Further configuration would be required. This is of particular concern when considering security.
+The installed host(s) will have open ports listening, and access to the graphite web console is without any authentication.
+
 ## Thanks
+
+[Contributors](https://github.com/gingerlime/graphite-fabric/graphs/contributors)
 
 Thanks to the authors of these online guides and resources who provided very useful information that I stitched together into this
 fabric script, and others who provided inspiration about Graphite in General:
@@ -48,6 +62,7 @@ fabric script, and others who provided inspiration about Graphite in General:
  * [Agile Testing - Installing and configuring Graphite](http://agiletesting.blogspot.de/2011/04/installing-and-configuring-graphite.html)
  * [Corey Goldberg - Installing Graphite 0.9.9 on Ubuntu 12.04 LTS](http://coreygoldberg.blogspot.de/2012/04/installing-graphite-099-on-ubuntu-1204.html)
  * [Tom Purl - Installing Graphite on Ubuntu 10.4 LTS](http://tompurl.com/2011/08/12/installing-graphite-on-ubuntu-10-4-lts/)
+ * [Bryan Helmig](https://github.com/bryanhelmig) - for adding installation of statsd
 
 Although not installed with this fabric script, I'd love to try these some time:
  * [Graphene](http://jondot.github.com/graphene/)

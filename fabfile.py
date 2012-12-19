@@ -3,6 +3,8 @@
 
 fabric-graphite is a fabric script to install Graphite, Nginx, uwsgi and all dependencies on a debian-based host.
 
+Plus, for a limited time, statsd support!
+
 To execute:
 
     * Make sure you have fabric installed on your local host (e.g. pip install fabric)
@@ -63,28 +65,21 @@ def graphite_install():
 
     # installing uwsgi from source
     with cd('/usr/local/src'):
-        sudo('wget http://projects.unbit.it/downloads/uwsgi-0.9.9.2.tar.gz')
-        sudo('tar -zxvf uwsgi-0.9.9.2.tar.gz')
-    with cd('/usr/local/src/uwsgi-0.9.9.2'):
-        result = sudo('python --version')
-        if '2.6' in result:
-            sudo('make -f Makefile.Py26')
-        elif '2.7' in result:
-            sudo('make -f Makefile.Py27')
-        else:
-            print "Unable to determine python version..."
-            sudo('make')
+        sudo('wget http://projects.unbit.it/downloads/uwsgi-1.2.3.tar.gz')
+        sudo('tar -zxvf uwsgi-1.2.3.tar.gz')
+    with cd('/usr/local/src/uwsgi-1.2.3'):
+        sudo('make')
 
         sudo('cp uwsgi /usr/local/bin/')
         sudo('cp nginx/uwsgi_params /etc/nginx/')
 
     # downloading nginx source
     with cd('/usr/local/src'):
-        sudo('wget http://nginx.org/download/nginx-1.0.15.tar.gz')
-        sudo('tar -zxvf nginx-1.0.15.tar.gz')
+        sudo('wget http://nginx.org/download/nginx-1.2.2.tar.gz')
+        sudo('tar -zxvf nginx-1.2.2.tar.gz')
 
     # installing nginx
-    with cd('/usr/local/src/nginx-1.0.15'):
+    with cd('/usr/local/src/nginx-1.2.2'):
         sudo('./configure --prefix=/usr/local --with-pcre=/usr/local/src/pcre-8.30/ --with-http_ssl_module --with-http_gzip_static_module --conf-path=/etc/nginx/nginx.conf --pid-path=/var/run/nginx.pid --lock-path=/var/lock/nginx.lock --error-log-path=/var/log/nginx/error.log --http-log-path=/var/log/nginx/access.log --user=www-data --group=www-data')
         sudo('make && make install')
 
@@ -94,15 +89,15 @@ def graphite_install():
 
     # installing pixman
     with cd('/usr/local/src'):
-        sudo('wget http://cairographics.org/releases/pixman-0.20.2.tar.gz')
-        sudo('tar -zxvf pixman-0.20.2.tar.gz')
-    with cd('/usr/local/src/pixman-0.20.2'):
+        sudo('wget http://cairographics.org/releases/pixman-0.24.4.tar.gz')
+        sudo('tar -zxvf pixman-0.24.4.tar.gz')
+    with cd('/usr/local/src/pixman-0.24.4'):
         sudo('./configure && make && make install')
     # installing cairo
     with cd('/usr/local/src'):
-        sudo('wget http://cairographics.org/releases/cairo-1.10.2.tar.gz')
-        sudo('tar -zxvf cairo-1.10.2.tar.gz')
-    with cd('/usr/local/src/cairo-1.10.2'):
+        sudo('wget http://cairographics.org/releases/cairo-1.12.2.tar.xz')
+        sudo('tar -Jxf cairo-1.12.2.tar.xz')
+    with cd('/usr/local/src/cairo-1.12.2'):
         sudo('./configure && make && make install')
     # installing py2cairo (python 2.x cairo)
     with cd('/usr/local/src'):
@@ -116,13 +111,8 @@ def graphite_install():
     with cd('/opt/graphite/conf/'):
         sudo('cp carbon.conf.example carbon.conf')
         sudo('cp storage-schemas.conf.example storage-schemas.conf')
-
-    # starting uwsgi
-    sudo('supervisorctl update && supervisorctl start uwsgi')
-
-    # starting carbon-cache
-    with cd('/opt/graphite/bin'):
-        sudo('./carbon-cache.py start')
+    # clearing old carbon log files
+    put('config/carbon-logrotate', '/etc/cron.daily/', use_sudo=True)
 
     # initializing graphite django db
     with cd('/opt/graphite/webapp/graphite'):
@@ -131,5 +121,35 @@ def graphite_install():
     # changing ownership on graphite folders
     sudo('chown -R www-data: /opt/graphite/')
 
+    # starting uwsgi
+    sudo('supervisorctl update && supervisorctl start uwsgi')
+
+    # starting carbon-cache
+    sudo('/etc/init.d/carbon start')
+
     # starting nginx
     sudo('nginx')
+
+
+def statsd_install():
+    """
+    Installs etsy's node.js statsd and dependencies
+    """
+    _check_sudo()
+    sudo('apt-get install -y make python g++ git-core supervisor')
+    with cd('/usr/local/src'):
+        sudo('wget -N http://nodejs.org/dist/node-latest.tar.gz')
+        sudo('tar -zxvf node-latest.tar.gz')
+        sudo('cd `ls -rd node-v*` && make install')
+
+    with cd('/opt'):
+        sudo('git clone https://github.com/etsy/statsd.git')
+
+    with cd('/opt/statsd'):
+        sudo('git checkout v0.5.0') # or comment this out and stay on trunk
+        put('config/localConfig.js', 'localConfig.js', use_sudo=True)
+        sudo('npm install')
+
+    put('config/statsd.conf', '/etc/supervisor/conf.d/', use_sudo=True)
+
+    sudo('supervisorctl update && supervisorctl start statsd')

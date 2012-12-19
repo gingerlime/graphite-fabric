@@ -1,21 +1,36 @@
 #! /bin/sh
 # /etc/init.d/carbon
 
+### BEGIN INIT INFO
+# Provides:          carbon
+# Required-Start:    $all
+# Required-Stop:     $all
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: starts the carbon daemon
+# Description:       starts/stops carbon
+### END INIT INFO
+
 # Some things that run always
 touch /var/lock/carbon
 
 GRAPHITE_HOME=/opt/graphite
 CARBON_USER=www-data
+RUNDIR=/var/run/carbon
+PIDFILE=$RUNDIR/carbon.pid
 
 # Carry out specific functions when asked to by the system
 case "$1" in
     start)
-        echo "Starting script carbon "
-        su $CARBON_USER -c "cd $GRAPHITE_HOME"; su $CARBON_USR -c "$GRAPHITE_HOME/bin/carbon-cache.py start"
+        echo "Starting script carbon"
+        mkdir -p $RUNDIR
+        chown -R $CARBON_USER:$CARBON_USER $RUNDIR
+        chmod 755 $RUNDIR
+        su $CARBON_USER -c "cd $GRAPHITE_HOME && $GRAPHITE_HOME/bin/carbon-cache.py --pidfile $PIDFILE start"
         ;;
     stop)
         echo "Stopping script carbon"
-        su $CARBON_USER -c "cd $GRAPHITE_HOME"; su $CARBON_USR -c "$GRAPHITE_HOME/bin/carbon-cache.py stop"
+        su $CARBON_USER -c "cd $GRAPHITE_HOME && $GRAPHITE_HOME/bin/carbon-cache.py --pidfile $PIDFILE stop"
         ;;
     *)
         echo "Usage: /etc/init.d/carbon {start|stop}"
