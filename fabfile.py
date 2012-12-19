@@ -33,7 +33,7 @@ def graphite_install():
     """
     _check_sudo()
     sudo('apt-get update && apt-get upgrade -y')
-    sudo('apt-get install -y python-dev python-setuptools libxml2-dev libpng12-dev pkg-config build-essential supervisor')
+    sudo('apt-get install -y python-dev python-setuptools libxml2-dev libpng12-dev pkg-config build-essential supervisor make python g++ git-core')
     sudo('easy_install pip')
     sudo('pip install simplejson') # required for django admin
     sudo('pip install carbon')
@@ -47,8 +47,8 @@ def graphite_install():
      
     # Downloading PCRE source (Required for nginx)
     with cd('/usr/local/src'):
-        sudo('wget ftp://ftp.csx.cam.ac.uk/pub/software/programming/pcre/pcre-8.30.tar.gz')
-        sudo('tar -zxvf pcre-8.30.tar.gz')
+        sudo('wget ftp://ftp.csx.cam.ac.uk/pub/software/programming/pcre/pcre-8.32.tar.gz')
+        sudo('tar -zxvf pcre-8.32.tar.gz')
 
     # creating nginx etc and log folders
     sudo('mkdir -p /etc/nginx')
@@ -65,9 +65,9 @@ def graphite_install():
 
     # installing uwsgi from source
     with cd('/usr/local/src'):
-        sudo('wget http://projects.unbit.it/downloads/uwsgi-1.2.3.tar.gz')
-        sudo('tar -zxvf uwsgi-1.2.3.tar.gz')
-    with cd('/usr/local/src/uwsgi-1.2.3'):
+        sudo('wget http://projects.unbit.it/downloads/uwsgi-1.4.3.tar.gz')
+        sudo('tar -zxvf uwsgi-1.4.3.tar.gz')
+    with cd('/usr/local/src/uwsgi-1.4.3'):
         sudo('make')
 
         sudo('cp uwsgi /usr/local/bin/')
@@ -75,12 +75,12 @@ def graphite_install():
 
     # downloading nginx source
     with cd('/usr/local/src'):
-        sudo('wget http://nginx.org/download/nginx-1.2.2.tar.gz')
-        sudo('tar -zxvf nginx-1.2.2.tar.gz')
+        sudo('wget http://nginx.org/download/nginx-1.2.6.tar.gz')
+        sudo('tar -zxvf nginx-1.2.6.tar.gz')
 
     # installing nginx
-    with cd('/usr/local/src/nginx-1.2.2'):
-        sudo('./configure --prefix=/usr/local --with-pcre=/usr/local/src/pcre-8.30/ --with-http_ssl_module --with-http_gzip_static_module --conf-path=/etc/nginx/nginx.conf --pid-path=/var/run/nginx.pid --lock-path=/var/lock/nginx.lock --error-log-path=/var/log/nginx/error.log --http-log-path=/var/log/nginx/access.log --user=www-data --group=www-data')
+    with cd('/usr/local/src/nginx-1.2.6'):
+        sudo('./configure --prefix=/usr/local --with-pcre=/usr/local/src/pcre-8.32/ --with-http_ssl_module --with-http_gzip_static_module --conf-path=/etc/nginx/nginx.conf --pid-path=/var/run/nginx.pid --lock-path=/var/lock/nginx.lock --error-log-path=/var/log/nginx/error.log --http-log-path=/var/log/nginx/access.log --user=www-data --group=www-data')
         sudo('make && make install')
 
     # copying nginx and uwsgi configuration files
@@ -89,15 +89,15 @@ def graphite_install():
 
     # installing pixman
     with cd('/usr/local/src'):
-        sudo('wget http://cairographics.org/releases/pixman-0.24.4.tar.gz')
-        sudo('tar -zxvf pixman-0.24.4.tar.gz')
-    with cd('/usr/local/src/pixman-0.24.4'):
+        sudo('wget http://cairographics.org/releases/pixman-0.28.2.tar.gz')
+        sudo('tar -zxvf pixman-0.28.2.tar.gz')
+    with cd('/usr/local/src/pixman-0.28.2'):
         sudo('./configure && make && make install')
     # installing cairo
     with cd('/usr/local/src'):
-        sudo('wget http://cairographics.org/releases/cairo-1.12.2.tar.xz')
-        sudo('tar -Jxf cairo-1.12.2.tar.xz')
-    with cd('/usr/local/src/cairo-1.12.2'):
+        sudo('wget http://cairographics.org/releases/cairo-1.12.8.tar.xz')
+        sudo('tar -Jxf cairo-1.12.8.tar.xz')
+    with cd('/usr/local/src/cairo-1.12.8'):
         sudo('./configure && make && make install')
     # installing py2cairo (python 2.x cairo)
     with cd('/usr/local/src'):
@@ -107,6 +107,9 @@ def graphite_install():
         sudo('./configure --prefix=/usr && make && make install')
         sudo('echo "/usr/local/lib" > /etc/ld.so.conf.d/pycairo.conf')
         sudo('ldconfig')
+    # installing giraffe dashboard
+    with cd('/opt/graphite/webapp'):
+        sudo('git clone git://github.com/kenhub/giraffe.git')
     # setting the carbon config files (default)
     with cd('/opt/graphite/conf/'):
         sudo('cp carbon.conf.example carbon.conf')
@@ -136,7 +139,6 @@ def statsd_install():
     Installs etsy's node.js statsd and dependencies
     """
     _check_sudo()
-    sudo('apt-get install -y make python g++ git-core supervisor')
     with cd('/usr/local/src'):
         sudo('wget -N http://nodejs.org/dist/node-latest.tar.gz')
         sudo('tar -zxvf node-latest.tar.gz')
