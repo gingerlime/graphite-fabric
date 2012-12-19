@@ -31,6 +31,11 @@ You can use it with a user other than root, as long as this user can `sudo`.
 During the installation, you would be asked to set up the django superuser account. You might want to create an account,
 but it's not strictly necessary. If you answer `no`, the installation will still work fine.
 
+### Giraffe Dashboard
+
+[Giraffe](https://github.com/kenhub/giraffe) is also included and installed. It is installed under
+`/opt/graphite/webapp/giraffe` and is accessible on `http://your-graphite-url/giraffe/`.
+
 ### **OPTIONAL:** Install statsd.
 
 After installing graphite, run `fab statsd_install -H root@{hostname}`
