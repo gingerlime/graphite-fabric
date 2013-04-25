@@ -75,11 +75,11 @@ def graphite_install():
 
     # downloading nginx source
     with cd('/usr/local/src'):
-        sudo('wget http://nginx.org/download/nginx-1.2.6.tar.gz')
-        sudo('tar -zxvf nginx-1.2.6.tar.gz')
+        sudo('wget http://nginx.org/download/nginx-1.2.7.tar.gz')
+        sudo('tar -zxvf nginx-1.2.7.tar.gz')
 
     # installing nginx
-    with cd('/usr/local/src/nginx-1.2.6'):
+    with cd('/usr/local/src/nginx-1.2.7'):
         sudo('./configure --prefix=/usr/local --with-pcre=/usr/local/src/pcre-8.32/ --with-http_ssl_module --with-http_gzip_static_module --conf-path=/etc/nginx/nginx.conf --pid-path=/var/run/nginx.pid --lock-path=/var/lock/nginx.lock --error-log-path=/var/log/nginx/error.log --http-log-path=/var/log/nginx/access.log --user=www-data --group=www-data')
         sudo('make && make install')
 
@@ -95,9 +95,9 @@ def graphite_install():
         sudo('./configure && make && make install')
     # installing cairo
     with cd('/usr/local/src'):
-        sudo('wget http://cairographics.org/releases/cairo-1.12.8.tar.xz')
-        sudo('tar -Jxf cairo-1.12.8.tar.xz')
-    with cd('/usr/local/src/cairo-1.12.8'):
+        sudo('wget http://cairographics.org/releases/cairo-1.12.14.tar.xz')
+        sudo('tar -Jxf cairo-1.12.14.tar.xz')
+    with cd('/usr/local/src/cairo-1.12.14'):
         sudo('./configure && make && make install')
     # installing py2cairo (python 2.x cairo)
     with cd('/usr/local/src'):
