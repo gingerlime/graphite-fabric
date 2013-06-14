@@ -115,7 +115,7 @@ def graphite_install():
         sudo('cp carbon.conf.example carbon.conf')
         sudo('cp storage-schemas.conf.example storage-schemas.conf')
     # clearing old carbon log files
-    put('config/carbon-logrotate', '/etc/cron.daily/', use_sudo=True)
+    put('config/carbon-logrotate', '/etc/cron.daily/', use_sudo=True, mode=0755)
 
     # initializing graphite django db
     with cd('/opt/graphite/webapp/graphite'):
