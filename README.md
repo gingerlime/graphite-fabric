@@ -12,7 +12,8 @@ and also better document what needs to be done. So instead of writing another gu
 
  * Workstation running python (version 2.7 recommended). All platforms should be supported.
  * [Fabric](http://docs.fabfile.org/en/1.4.1/index.html) - can be installed via `pip install fabric` or `easy_install fabric`
- * a new VPS/Dedicated server running a Debian-based distribution (Debian, Ubuntu etc)
+ * a new VPS/Dedicated server running a Debian-based distribution (Debian, Ubuntu etc) - or
+ * Virtualbox with Vagrant (see below)
 
 ### Target Host
 
@@ -30,6 +31,19 @@ You can use it with a user other than root, as long as this user can `sudo`.
 
 During the installation, you would be asked to set up the django superuser account. You might want to create an account,
 but it's not strictly necessary. If you answer `no`, the installation will still work fine.
+
+### Vagrant
+
+you can now install graphite using [vagrant](http://www.vagrantup.com/) on your local virutalbox. If you have vagrant installed, simply use
+
+```
+$ pip install fabtools
+$ vagrant up
+...
+$ fab vagrant graphite_install
+```
+
+Once installed, you can access your graphite server on `http://localhost:8080/graphite`
 
 ### Giraffe Dashboard
 
