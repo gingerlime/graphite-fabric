@@ -136,6 +136,7 @@ def graphite_install():
     sudo('nginx')
 
 
+@task
 def statsd_install():
     """
     Installs etsy's node.js statsd and dependencies
