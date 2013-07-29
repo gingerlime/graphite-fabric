@@ -17,8 +17,9 @@ Best to execute this on a clean virtual machine running Debian 6 (Squeeze).
 Also tested successfully on Ubuntu 12.04 VPS.
 
 """
+from vagrant import vagrant
+from fabric.api import cd, sudo, run, put, settings, task
 
-from fabric.api import cd, sudo, run, put, settings
 
 def _check_sudo():
     with settings(warn_only=True):
@@ -27,6 +28,7 @@ def _check_sudo():
             print "Trying to install sudo. Must be root"
             run('apt-get update && apt-get install -y sudo')  
 
+@task
 def graphite_install():
     """
     Installs Graphite and dependencies
@@ -47,8 +49,8 @@ def graphite_install():
      
     # Downloading PCRE source (Required for nginx)
     with cd('/usr/local/src'):
-        sudo('wget ftp://ftp.csx.cam.ac.uk/pub/software/programming/pcre/pcre-8.32.tar.gz')
-        sudo('tar -zxvf pcre-8.32.tar.gz')
+        sudo('wget http://sourceforge.net/projects/pcre/files/pcre/8.33/pcre-8.33.tar.gz/download# -O pcre-8.33.tar.gz')
+        sudo('tar -zxvf pcre-8.33.tar.gz')
 
     # creating nginx etc and log folders
     sudo('mkdir -p /etc/nginx')
@@ -80,7 +82,7 @@ def graphite_install():
 
     # installing nginx
     with cd('/usr/local/src/nginx-1.2.7'):
-        sudo('./configure --prefix=/usr/local --with-pcre=/usr/local/src/pcre-8.32/ --with-http_ssl_module --with-http_gzip_static_module --conf-path=/etc/nginx/nginx.conf --pid-path=/var/run/nginx.pid --lock-path=/var/lock/nginx.lock --error-log-path=/var/log/nginx/error.log --http-log-path=/var/log/nginx/access.log --user=www-data --group=www-data')
+        sudo('./configure --prefix=/usr/local --with-pcre=/usr/local/src/pcre-8.33/ --with-http_ssl_module --with-http_gzip_static_module --conf-path=/etc/nginx/nginx.conf --pid-path=/var/run/nginx.pid --lock-path=/var/lock/nginx.lock --error-log-path=/var/log/nginx/error.log --http-log-path=/var/log/nginx/access.log --user=www-data --group=www-data')
         sudo('make && make install')
 
     # copying nginx and uwsgi configuration files
@@ -115,7 +117,7 @@ def graphite_install():
         sudo('cp carbon.conf.example carbon.conf')
         sudo('cp storage-schemas.conf.example storage-schemas.conf')
     # clearing old carbon log files
-    put('config/carbon-logrotate', '/etc/cron.daily/', use_sudo=True)
+    put('config/carbon-logrotate', '/etc/cron.daily/', use_sudo=True, mode=0755)
 
     # initializing graphite django db
     with cd('/opt/graphite/webapp/graphite'):
@@ -134,6 +136,7 @@ def graphite_install():
     sudo('nginx')
 
 
+@task
 def statsd_install():
     """
     Installs etsy's node.js statsd and dependencies
