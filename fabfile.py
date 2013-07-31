@@ -142,6 +142,8 @@ def statsd_install():
     Installs etsy's node.js statsd and dependencies
     """
     _check_sudo()
+    sudo('apt-get update && apt-get upgrade -y')
+    sudo('apt-get install -y build-essential supervisor make git-core')
     with cd('/usr/local/src'):
         sudo('wget -N http://nodejs.org/dist/node-latest.tar.gz')
         sudo('tar -zxvf node-latest.tar.gz')
@@ -151,10 +153,13 @@ def statsd_install():
         sudo('git clone https://github.com/etsy/statsd.git')
 
     with cd('/opt/statsd'):
-        sudo('git checkout v0.5.0') # or comment this out and stay on trunk
+        sudo('git checkout v0.6.0') # or comment this out and stay on trunk
         put('config/localConfig.js', 'localConfig.js', use_sudo=True)
         sudo('npm install')
 
     put('config/statsd.conf', '/etc/supervisor/conf.d/', use_sudo=True)
-
     sudo('supervisorctl update && supervisorctl start statsd')
+
+    # UDP buffer tuning for statsd
+    put('config/10-statsd.conf', '/etc/sysctl.d/', use_sudo=True)
+    sudo('sysctl -p /etc/sysctl.d/10-statsd.conf')
