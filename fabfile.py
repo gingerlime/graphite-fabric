@@ -40,7 +40,7 @@ def graphite_install():
     sudo('pip install simplejson') # required for django admin
     sudo('pip install carbon')
     sudo('pip install whisper')
-    sudo('pip install django==1.3')
+    sudo('pip install django==1.5.2')
     sudo('pip install django-tagging')
     sudo('pip install graphite-web')
 
