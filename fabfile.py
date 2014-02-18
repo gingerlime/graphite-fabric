@@ -45,11 +45,11 @@ def graphite_install():
     sudo('apt-get install -y python-dev python-setuptools libxml2-dev libpng12-dev pkg-config build-essential supervisor make python g++ git-core')
     sudo('easy_install pip')
     sudo('pip install simplejson') # required for django admin
-    sudo('pip install git+git://github.com/graphite-project/carbon.git@0.9.x#egg=carbon')
+    sudo('pip install git+https://github.com/graphite-project/carbon.git@0.9.x#egg=carbon')
     sudo('pip install whisper')
     sudo('pip install django==1.5.2')
     sudo('pip install django-tagging')
-    sudo('pip install git+git://github.com/graphite-project/graphite-web.git@0.9.x#egg=graphite-web')
+    sudo('pip install git+https://github.com/graphite-project/graphite-web.git@0.9.x#egg=graphite-web')
 
     # creating a folder for downloaded source files
     sudo('mkdir -p /usr/local/src')
@@ -118,7 +118,7 @@ def graphite_install():
         sudo('ldconfig')
     # installing giraffe dashboard
     with cd('/opt/graphite/webapp'):
-        sudo('git clone git://github.com/kenhub/giraffe.git')
+        sudo('git clone https://github.com/kenhub/giraffe.git')
     # setting the carbon config files (default)
     with cd('/opt/graphite/conf/'):
         sudo('cp carbon.conf.example carbon.conf')
