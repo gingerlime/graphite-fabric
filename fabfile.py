@@ -160,7 +160,7 @@ def statsd_install():
         sudo('git clone https://github.com/etsy/statsd.git')
 
     with cd('/opt/statsd'):
-        sudo('git checkout v0.6.0') # or comment this out and stay on trunk
+        sudo('git checkout v0.7.1') # or comment this out and stay on trunk
         put(conf_file('localConfig.js'), 'localConfig.js', use_sudo=True)
         sudo('npm install')
 
