@@ -46,7 +46,7 @@ def graphite_install():
     sudo('easy_install pip')
     sudo('pip install simplejson') # required for django admin
     sudo('pip install git+https://github.com/graphite-project/carbon.git@0.9.x#egg=carbon')
-    sudo('pip install whisper')
+    sudo('pip install git+https://github.com/graphite-project/whisper.git@master#egg=whisper')
     sudo('pip install django==1.5.2')
     sudo('pip install django-tagging')
     sudo('pip install git+https://github.com/graphite-project/graphite-web.git@0.9.x#egg=graphite-web')
