@@ -42,13 +42,13 @@ def graphite_install():
     """
     _check_sudo()
     sudo('apt-get update && apt-get upgrade -y')
-    sudo('apt-get install -y python-dev python-setuptools libxml2-dev libpng12-dev pkg-config build-essential supervisor make python g++ git-core')
+    sudo('apt-get install -y python-dev python-setuptools libssl-dev libxml2-dev libpng12-dev pkg-config build-essential supervisor make python g++ git-core')
     sudo('easy_install pip')
     sudo('pip install simplejson') # required for django admin
     sudo('pip install git+https://github.com/graphite-project/carbon.git@0.9.x#egg=carbon')
     sudo('pip install git+https://github.com/graphite-project/whisper.git@master#egg=whisper')
-    sudo('pip install django==1.5.2')
-    sudo('pip install django-tagging')
+    sudo('pip install django==1.8.2')
+    sudo('pip install django-tagging==0.3.6')
     sudo('pip install git+https://github.com/graphite-project/graphite-web.git@0.9.x#egg=graphite-web')
 
     # creating a folder for downloaded source files
@@ -56,8 +56,8 @@ def graphite_install():
 
     # Downloading PCRE source (Required for nginx)
     with cd('/usr/local/src'):
-        sudo('wget http://sourceforge.net/projects/pcre/files/pcre/8.33/pcre-8.33.tar.gz/download# -O pcre-8.33.tar.gz')
-        sudo('tar -zxvf pcre-8.33.tar.gz')
+        sudo('wget http://sourceforge.net/projects/pcre/files/pcre/8.37/pcre-8.37.tar.gz/download# -O pcre-8.37.tar.gz')
+        sudo('tar -zxvf pcre-8.37.tar.gz')
 
     # creating nginx etc and log folders
     sudo('mkdir -p /etc/nginx')
@@ -72,24 +72,25 @@ def graphite_install():
     sudo('cd /etc/init.d && update-rc.d nginx defaults')
     sudo('cd /etc/init.d && update-rc.d carbon defaults')
 
+    sudo('chsh -s /bin/bash www-data')
+
     # installing uwsgi from source
     with cd('/usr/local/src'):
-        sudo('wget http://projects.unbit.it/downloads/uwsgi-1.4.3.tar.gz')
-        sudo('tar -zxvf uwsgi-1.4.3.tar.gz')
-    with cd('/usr/local/src/uwsgi-1.4.3'):
+        sudo('wget http://projects.unbit.it/downloads/uwsgi-2.0.11.tar.gz')
+        sudo('tar -zxvf uwsgi-2.0.11.tar.gz')
+    with cd('/usr/local/src/uwsgi-2.0.11'):
         sudo('make')
 
         sudo('cp uwsgi /usr/local/bin/')
-        sudo('cp nginx/uwsgi_params /etc/nginx/')
 
     # downloading nginx source
     with cd('/usr/local/src'):
-        sudo('wget http://nginx.org/download/nginx-1.2.7.tar.gz')
-        sudo('tar -zxvf nginx-1.2.7.tar.gz')
+        sudo('wget http://nginx.org/download/nginx-1.8.0.tar.gz')
+        sudo('tar -zxvf nginx-1.8.0.tar.gz')
 
     # installing nginx
-    with cd('/usr/local/src/nginx-1.2.7'):
-        sudo('./configure --prefix=/usr/local --with-pcre=/usr/local/src/pcre-8.33/ --with-http_ssl_module --with-http_gzip_static_module --conf-path=/etc/nginx/nginx.conf --pid-path=/var/run/nginx.pid --lock-path=/var/lock/nginx.lock --error-log-path=/var/log/nginx/error.log --http-log-path=/var/log/nginx/access.log --user=www-data --group=www-data')
+    with cd('/usr/local/src/nginx-1.8.0'):
+        sudo('./configure --prefix=/usr/local --with-pcre=/usr/local/src/pcre-8.37/ --with-http_ssl_module --with-http_gzip_static_module --conf-path=/etc/nginx/nginx.conf --pid-path=/var/run/nginx.pid --lock-path=/var/lock/nginx.lock --error-log-path=/var/log/nginx/error.log --http-log-path=/var/log/nginx/access.log --user=www-data --group=www-data')
         sudo('make && make install')
 
     # copying nginx and uwsgi configuration files
@@ -98,15 +99,15 @@ def graphite_install():
 
     # installing pixman
     with cd('/usr/local/src'):
-        sudo('wget http://cairographics.org/releases/pixman-0.28.2.tar.gz')
-        sudo('tar -zxvf pixman-0.28.2.tar.gz')
-    with cd('/usr/local/src/pixman-0.28.2'):
+        sudo('wget http://cairographics.org/releases/pixman-0.32.6.tar.gz')
+        sudo('tar -zxvf pixman-0.32.6.tar.gz')
+    with cd('/usr/local/src/pixman-0.32.6'):
         sudo('./configure && make && make install')
     # installing cairo
     with cd('/usr/local/src'):
-        sudo('wget http://cairographics.org/releases/cairo-1.12.14.tar.xz')
-        sudo('tar -Jxf cairo-1.12.14.tar.xz')
-    with cd('/usr/local/src/cairo-1.12.14'):
+        sudo('wget http://cairographics.org/releases/cairo-1.14.2.tar.xz')
+        sudo('tar -Jxf cairo-1.14.2.tar.xz')
+    with cd('/usr/local/src/cairo-1.14.2'):
         sudo('./configure && make && make install')
     # installing py2cairo (python 2.x cairo)
     with cd('/usr/local/src'):
@@ -154,13 +155,13 @@ def statsd_install():
     with cd('/usr/local/src'):
         sudo('wget -N http://nodejs.org/dist/node-latest.tar.gz')
         sudo('tar -zxvf node-latest.tar.gz')
-        sudo('cd `ls -rd node-v*` && make install')
+        sudo('cd `ls -rd node-v*` && ./configure && make install')
 
     with cd('/opt'):
         sudo('git clone https://github.com/etsy/statsd.git')
 
     with cd('/opt/statsd'):
-        sudo('git checkout v0.7.1') # or comment this out and stay on trunk
+        sudo('git checkout v0.7.2') # or comment this out and stay on trunk
         put(conf_file('localConfig.js'), 'localConfig.js', use_sudo=True)
         sudo('npm install')
 

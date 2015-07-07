@@ -11,3 +11,4 @@ def vagrant(name=''):
     sudo('rsync -az /home/vagrant/.ssh/ /root/.ssh/')
     sudo('chown -R root: /root/.ssh')
     env['host_string'] = env['host_string'].replace('vagrant', 'root')
+    env['hosts'] = [x.replace('vagrant', 'root') for x in env['hosts']]
